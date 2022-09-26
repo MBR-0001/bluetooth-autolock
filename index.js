@@ -29,8 +29,6 @@ assert.notEqual(address, undefined, "Missing address");
             }, 10e3);
         }
     });
-
-    console.log(await properties.Get("org.bluez.Device1", "Connected"));
 })();
 
 setInterval(() => {
@@ -44,7 +42,9 @@ setInterval(() => {
             return console.error("NaN value??", d, data);
         }
         
-        if (val <= -5) {
+        const threshold = process.env.RSSI_THRESHOLD && !isNaN(process.env.RSSI_THRESHOLD) ? Number(process.env.RSSI_THRESHOLD) : -5;
+
+        if (val <= threshold) {
             console.debug("RSSI < -5 (" + val + ")");
             lock();
         }
