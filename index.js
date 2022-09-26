@@ -11,11 +11,11 @@ assert.notEqual(address, undefined, "Missing address");
 (async () => {
     const interface = await bus.getProxyObject("org.bluez", "/org/bluez/hci0/dev_" + address.replace(/:/g, "_"));
     
-    assert.equal(Object.keys(interface.interfaces).length > 1, true, "Invalid device MAC address");
+    assert.equal(Object.keys(interface.interfaces).length > 1, true, "Invalid device MAC address/device not paired");
     
     const properties = interface.getInterface("org.freedesktop.DBus.Properties");
 
-    console.log("Connected to D-Bus and listening for disconnect event");
+    console.log("Connected to D-Bus and listening for disconnect events");
 
     properties.on("PropertiesChanged", (iface, changed) => {
         if (changed.Connected.value === false) {
@@ -44,8 +44,8 @@ setInterval(() => {
             return console.error("NaN value??", d, data);
         }
         
-        if (val < -5) {
-            console.debug("RSSI < 5 (" + val + ")");
+        if (val <= -5) {
+            console.debug("RSSI < -5 (" + val + ")");
             lock();
         }
     });
@@ -55,7 +55,12 @@ async function lock() {
     const bus = dbus.sessionBus();
     const obj = await bus.getProxyObject("org.freedesktop.ScreenSaver", "/ScreenSaver").catch(console.error);
     if (!obj) return;
+
     const interface = obj.getInterface("org.freedesktop.ScreenSaver");
+    if (!interface) {
+        return console.error("Failed to obtain interface", Object.keys(obj.interfaces).length);
+    }
+    
     console.debug("Got interface, attempting to lock");
     interface?.Lock();
 }
