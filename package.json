@@ -1,7 +1,7 @@
 {
   "name": "bluetooth-autolock",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automatically locks the machine when the specified bluetooth device disconnects/goes away",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +12,8 @@
   "dependencies": {
     "dbus-next": "^0.10.2",
     "dotenv": "^16.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.24.0"
   }
 }
