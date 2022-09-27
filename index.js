@@ -22,8 +22,8 @@ assert.notEqual(address, undefined, "Missing address");
             console.log("PropertiesChanged Connected false");
             // Timeout in case of manual re-connecting
             setTimeout(async () => {
-                const isConnected = await properties.Get("org.bluez.Device1", "Connected");
-                if (isConnected.value === false) {
+                const isConnected = await properties.Get("org.bluez.Device1", "Connected").catch(console.error);
+                if (isConnected == undefined || isConnected.value === false) {
                     lock();
                 }
             }, 10e3);
